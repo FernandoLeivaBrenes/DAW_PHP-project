@@ -10,16 +10,37 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
 
-    <title>/*FlussoBorvo*/</title> <!-- Sujeto a cambios -->
+    <!-- 
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+        <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    -->
+
+    <link rel="stylesheet" href="assets/css/index.css">
+
+    <title>/*FlussoBorvo*/ EcoRent </title> <!-- Sujeto a cambios -->
 
 </head>
 <body class="h-100 d-flex justify-content-center align-items-center flex-column">
     
     <section><H1>LOGO</H1></section>
-    <section id="login-form" class="card">
-        <form class="card-body">
+    <section id="login-form" class="card card-xl-4">
+        <form class="card-body" action="#" method="POST">
+            <h3>Sign In</h3>
 
-            hola no data
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="text" id="email" pattern="[A-Z,a-z]*">
+                <label class="mdl-textfield__label" for="email">Email</label>
+                <span class="mdl-textfield__error">Not Okay</span>
+            </div>
+
+            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                <input class="mdl-textfield__input" type="password" id="passText" pattern="[A-Z,a-z]*">
+                <label class="mdl-textfield__label" for="passText">Password</label>
+            </div>
+
+            <div>hola</div>
+
         </form>
     </section>
 
