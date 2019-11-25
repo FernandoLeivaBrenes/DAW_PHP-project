@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-11-2019 a las 12:28:32
+-- Tiempo de generación: 25-11-2019 a las 01:32:43
 -- Versión del servidor: 10.4.6-MariaDB
 -- Versión de PHP: 7.3.9
 
@@ -25,6 +25,24 @@ SET time_zone = "+00:00";
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `alquiler`
+--
+
+CREATE TABLE `alquiler` (
+  `uuid_alquiler` varchar(26) NOT NULL,
+  `uuid_usuario` varchar(26) NOT NULL,
+  `uuid_vehiculo` varchar(26) NOT NULL,
+  `fecha_inicio` datetime NOT NULL,
+  `fecha_fin` datetime DEFAULT NULL,
+  `punto_inicio` varchar(30) NOT NULL,
+  `punto_fin` varchar(30) DEFAULT NULL,
+  `modo` varchar(6) NOT NULL,
+  `cod_vehiculo` varchar(6) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `categoria`
 --
 
@@ -42,8 +60,9 @@ CREATE TABLE `categoria` (
 CREATE TABLE `itv` (
   `uuid_vehiculo` varchar(26) NOT NULL,
   `fecha_actual` date NOT NULL,
-  `fecha_proxima` date DEFAULT NULL,
-  `respuesta` text NOT NULL
+  `fecha_proxima` date NOT NULL,
+  `respuesta` text DEFAULT NULL,
+  `respuesta_bool` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -55,7 +74,7 @@ CREATE TABLE `itv` (
 CREATE TABLE `marca` (
   `uuid_marca` varchar(26) NOT NULL,
   `nombre_fabri` varchar(100) NOT NULL,
-  `dir_marca` varchar(100) DEFAULT NULL,
+  `dir_fabricante` varchar(100) DEFAULT NULL,
   `nombre_marca` varchar(100) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -100,7 +119,7 @@ CREATE TABLE `seguro_vehiculo` (
 
 CREATE TABLE `token` (
   `uuid_token` varchar(26) NOT NULL,
-  `uuid_usu` varchar(26) NOT NULL,
+  `uuid_usuario` varchar(26) NOT NULL,
   `token` varchar(32) NOT NULL,
   `fecha_solicitud` datetime NOT NULL,
   `fecha_uso` datetime DEFAULT NULL
@@ -113,17 +132,16 @@ CREATE TABLE `token` (
 --
 
 CREATE TABLE `usuario` (
-  `uuid_usu` varchar(26) NOT NULL,
+  `uuid_usuario` varchar(26) NOT NULL,
   `nombre` varchar(100) NOT NULL,
   `apellido_1` varchar(100) NOT NULL,
   `apellido_2` varchar(100) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `passwd` varchar(255) NOT NULL,
-  `fecha_nac` date DEFAULT NULL,
-  `fecha_init` date DEFAULT NULL,
-  `tipo_usu` int(1) DEFAULT 0,
-  `img_carnet` varchar(255) DEFAULT NULL,
-  `img_cerfil` varchar(255) NOT NULL
+  `fecha_nacimiento` date DEFAULT NULL,
+  `fecha_inicio` date DEFAULT NULL,
+  `tipo_usuario` int(1) DEFAULT 0,
+  `API_code` varchar(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -139,9 +157,8 @@ CREATE TABLE `vehiculo` (
   `uuid_marca` varchar(26) NOT NULL,
   `uuid_modelo` varchar(26) NOT NULL,
   `uuid_categoria` varchar(26) NOT NULL,
-  `uuid_seguro` varchar(26) NOT NULL,
-  `uuid_itv` varchar(26) NOT NULL,
-  `en_venta` tinyint(1) NOT NULL DEFAULT 0
+  `en_venta` tinyint(1) NOT NULL DEFAULT 0,
+  `activo` tinyint(1) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 -- --------------------------------------------------------
@@ -151,6 +168,7 @@ CREATE TABLE `vehiculo` (
 --
 
 CREATE TABLE `vehiculo_observacion` (
+  `uuid_obs` varchar(26) NOT NULL,
   `uuid_vehiculo` varchar(26) NOT NULL,
   `fecha_observacion` date NOT NULL,
   `observacion` text NOT NULL
@@ -161,10 +179,24 @@ CREATE TABLE `vehiculo_observacion` (
 --
 
 --
+-- Indices de la tabla `alquiler`
+--
+ALTER TABLE `alquiler`
+  ADD PRIMARY KEY (`uuid_alquiler`),
+  ADD KEY `FK_alquiler_usuario` (`uuid_usuario`),
+  ADD KEY `FK_alquiler_vehiculo` (`uuid_vehiculo`);
+
+--
 -- Indices de la tabla `categoria`
 --
 ALTER TABLE `categoria`
   ADD PRIMARY KEY (`uuid_categoria`);
+
+--
+-- Indices de la tabla `itv`
+--
+ALTER TABLE `itv`
+  ADD PRIMARY KEY (`uuid_vehiculo`,`fecha_actual`);
 
 --
 -- Indices de la tabla `marca`
@@ -182,13 +214,24 @@ ALTER TABLE `modelo`
 -- Indices de la tabla `seguro_vehiculo`
 --
 ALTER TABLE `seguro_vehiculo`
-  ADD PRIMARY KEY (`uuid_seguro`);
+  ADD PRIMARY KEY (`uuid_seguro`),
+  ADD KEY `FK_seguro_vehiculo` (`uuid_vehiculo`);
+
+--
+-- Indices de la tabla `token`
+--
+ALTER TABLE `token`
+  ADD PRIMARY KEY (`uuid_token`),
+  ADD UNIQUE KEY `token` (`token`),
+  ADD KEY `FK_token_usuario` (`uuid_usuario`);
 
 --
 -- Indices de la tabla `usuario`
 --
 ALTER TABLE `usuario`
-  ADD PRIMARY KEY (`uuid_usu`);
+  ADD PRIMARY KEY (`uuid_usuario`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD UNIQUE KEY `API_code` (`API_code`);
 
 --
 -- Indices de la tabla `vehiculo`
@@ -196,7 +239,60 @@ ALTER TABLE `usuario`
 ALTER TABLE `vehiculo`
   ADD PRIMARY KEY (`uuid_vehiculo`),
   ADD UNIQUE KEY `matricula` (`matricula`),
-  ADD UNIQUE KEY `n_chasis` (`n_chasis`);
+  ADD UNIQUE KEY `n_chasis` (`n_chasis`),
+  ADD KEY `FK_marca_vehiculo` (`uuid_marca`),
+  ADD KEY `FK_modelo_vehiculo` (`uuid_modelo`),
+  ADD KEY `FK_categoria_vehiculo` (`uuid_categoria`);
+
+--
+-- Indices de la tabla `vehiculo_observacion`
+--
+ALTER TABLE `vehiculo_observacion`
+  ADD PRIMARY KEY (`uuid_obs`),
+  ADD KEY `FK_vehiculo_observacion` (`uuid_vehiculo`);
+
+--
+-- Restricciones para tablas volcadas
+--
+
+--
+-- Filtros para la tabla `alquiler`
+--
+ALTER TABLE `alquiler`
+  ADD CONSTRAINT `FK_alquiler_usuario` FOREIGN KEY (`uuid_usuario`) REFERENCES `usuario` (`uuid_usuario`),
+  ADD CONSTRAINT `FK_alquiler_vehiculo` FOREIGN KEY (`uuid_vehiculo`) REFERENCES `vehiculo` (`uuid_vehiculo`);
+
+--
+-- Filtros para la tabla `itv`
+--
+ALTER TABLE `itv`
+  ADD CONSTRAINT `FK_itv_vehiculo` FOREIGN KEY (`uuid_vehiculo`) REFERENCES `vehiculo` (`uuid_vehiculo`);
+
+--
+-- Filtros para la tabla `seguro_vehiculo`
+--
+ALTER TABLE `seguro_vehiculo`
+  ADD CONSTRAINT `FK_seguro_vehiculo` FOREIGN KEY (`uuid_vehiculo`) REFERENCES `vehiculo` (`uuid_vehiculo`);
+
+--
+-- Filtros para la tabla `token`
+--
+ALTER TABLE `token`
+  ADD CONSTRAINT `FK_token_usuario` FOREIGN KEY (`uuid_usuario`) REFERENCES `usuario` (`uuid_usuario`);
+
+--
+-- Filtros para la tabla `vehiculo`
+--
+ALTER TABLE `vehiculo`
+  ADD CONSTRAINT `FK_categoria_vehiculo` FOREIGN KEY (`uuid_categoria`) REFERENCES `categoria` (`uuid_categoria`),
+  ADD CONSTRAINT `FK_marca_vehiculo` FOREIGN KEY (`uuid_marca`) REFERENCES `marca` (`uuid_marca`),
+  ADD CONSTRAINT `FK_modelo_vehiculo` FOREIGN KEY (`uuid_modelo`) REFERENCES `modelo` (`uuid_modelo`);
+
+--
+-- Filtros para la tabla `vehiculo_observacion`
+--
+ALTER TABLE `vehiculo_observacion`
+  ADD CONSTRAINT `FK_vehiculo_observacion` FOREIGN KEY (`uuid_vehiculo`) REFERENCES `vehiculo` (`uuid_vehiculo`);
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
