@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 4.9.1
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-11-2019 a las 01:32:43
--- Versión del servidor: 10.4.6-MariaDB
--- Versión de PHP: 7.3.9
+-- Tiempo de generación: 28-11-2019 a las 06:43:29
+-- Versión del servidor: 10.4.8-MariaDB
+-- Versión de PHP: 7.3.10
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 SET AUTOCOMMIT = 0;
@@ -136,13 +136,20 @@ CREATE TABLE `usuario` (
   `nombre` varchar(100) NOT NULL,
   `apellido_1` varchar(100) NOT NULL,
   `apellido_2` varchar(100) DEFAULT NULL,
-  `email` varchar(255) NOT NULL,
-  `passwd` varchar(255) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `passwd` varchar(128) NOT NULL,
   `fecha_nacimiento` date DEFAULT NULL,
   `fecha_inicio` date DEFAULT NULL,
   `tipo_usuario` int(1) DEFAULT 0,
   `API_code` varchar(32) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Volcado de datos para la tabla `usuario`
+--
+
+INSERT INTO `usuario` (`uuid_usuario`, `nombre`, `apellido_1`, `apellido_2`, `email`, `passwd`, `fecha_nacimiento`, `fecha_inicio`, `tipo_usuario`, `API_code`) VALUES
+('4b340550242239.64159797', 'Fernando', 'Leiva', NULL, 'Fernando@fernando.es', 'd404559f602eab6fd602ac7680dacbfaadd13630335e951f097af3900e9de176b6db28512f2e000b9d04fba5133e8b1c6e8df59db3a8ab9d60be4b97cc9e81db', NULL, NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
