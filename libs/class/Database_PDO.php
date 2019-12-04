@@ -2,7 +2,7 @@
 
     /**
      * @author Fernando Leiva Brenes
-     * 2018 / 19 
+     * Curso 2018 / 19 
      */
     include_once "libs/class/Usuario.php";
 
@@ -112,7 +112,7 @@
             
                 $this->result = $this->PDO_connection->prepare($sqlBefore);
                 
-                if($this->result->execute();):echo "OK";
+                $this->result->execute();
             } catch (PDOException $e){
                 $this->result = "ERROR --> ".$e;
             }

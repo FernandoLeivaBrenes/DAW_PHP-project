@@ -6,7 +6,6 @@ require_once("./libs/class/Usuario.php");
 class Session
 {
     private $user ; 
-    private $time_expire = 30000 ;				// segundos
     private static $instance = null ;
     
     private function __construct() { }
@@ -24,12 +23,11 @@ class Session
 
         // Comprobamos que la variable _SESSION variable gobal $_SESSION este indicada
         if (isset($_SESSION["_SESSION"])):
-            self::$instance = unserialize($_SESSION["_SESSION"] ) ;
+            self::$instance = unserialize( $_SESSION["_SESSION"] ) ;
         else:
             if (self::$instance===null) 
                 self::$instance = new Session() ;
         endif ;
-
         // Devolvemos la instancia
         return self::$instance ;
     }
@@ -60,7 +58,7 @@ class Session
 
 			// buscamos el usuario
             //$sql  = "SELECT * FROM usuario WHERE email=:ema AND pass=MD5(:pas) ; " ;
-            $sql = "SELECT * FROM usuario WHERE email='Fernando@fernando.1.es' ";//AND pass=SHA2('1234') ;" ;
+            $sql = "SELECT * FROM usuario WHERE email='Fernando@fernando.es' ";//AND pass=SHA2('1234') ;" ;
             $info = array(
                 "sql"=>$sql ,
                 "opciones"=>"ni una"
@@ -68,17 +66,11 @@ class Session
 			
 
             if ($dbPDO->query($info)):
-
 				// rescatar la información del usuario
                 $this->user = $dbPDO->getObject("Usuario");
-                echo "<pre>".print_r($this->user, true)."</pre>";
-
-				// si el usuario es correcto, iniciamos la sesión
-				// guardamos el momento (segs.) en que se inicia
-				// la sesión
-				$_SESSION["time"]    = time() ;
+                
 				$_SESSION["_SESSION"] = serialize(self::$instance) ;
-
+                echo "<pre>".print_r(self::$instance, true)."</pre>";
 				// la sesión se ha iniciado
                 return true ;
 
