@@ -1,7 +1,7 @@
 <?php
 
 require_once("./libs/class/Database_PDO.php");
-//require_once("./libs/class/Usuario.php");
+require_once("./libs/class/Usuario.php");
 
 class Session
 {
@@ -56,30 +56,31 @@ class Session
     public function login():bool
 		{
 			// Instanciamos la clase Database_PDO
-			$db = Database_PDO::getInstance( "ecorent", "root", "" ) ;
+			$dbPDO = Database_PDO::getInstance( "ecorent", "root", "" ) ;
 
 			// buscamos el usuario
             //$sql  = "SELECT * FROM usuario WHERE email=:ema AND pass=MD5(:pas) ; " ;
-            $sql = "SELECT * FROM usuario WHERE email='Fernando@fernando.es' AND pass=SHA2('1234') ;" ;
+            $sql = "SELECT * FROM usuario WHERE email='Fernando@fernando.1.es' ";//AND pass=SHA2('1234') ;" ;
             $info = array(
-                "sql"=>$sql,
+                "sql"=>$sql ,
                 "opciones"=>"ni una"
             );
 			
 
-			if ($db->query($info)):
+            if ($dbPDO->query($info)):
 
 				// rescatar la información del usuario
-				//$this->usuario = $db->getObject("Usuario") ;
+                $this->user = $dbPDO->getObject("Usuario");
+                echo "<pre>".print_r($this->user, true)."</pre>";
 
 				// si el usuario es correcto, iniciamos la sesión
 				// guardamos el momento (segs.) en que se inicia
 				// la sesión
 				$_SESSION["time"]    = time() ;
-				$_SESSION["_sesion"] = serialize(self::$instancia) ;
+				$_SESSION["_SESSION"] = serialize(self::$instance) ;
 
 				// la sesión se ha iniciado
-				return true ;
+                return true ;
 
 			endif ;
 

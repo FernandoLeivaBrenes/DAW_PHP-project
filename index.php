@@ -11,8 +11,7 @@
     <h1>Test conexion</h1>
 
 <?php
-    require_once "./libs/class/Session.php" ;
-    echo "hola";
+    require_once "./libs/class/Session.php";
 
     $ses = Session::getInstance();
 

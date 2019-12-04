@@ -4,6 +4,7 @@
      * @author Fernando Leiva Brenes
      * 2018 / 19 
      */
+    include_once "libs/class/Usuario.php";
 
     class Database_PDO
     {
@@ -101,11 +102,30 @@
          */
         public function query($info)
         {
-            echo "<pre>".print_r($info, true)."</pre>";
-            // Damos el atributo al la 
-            //$PDO_connection->setAttribute("PDO::ATTR_ERRMODE", PDO::ERRMODE_EXCEPTION);
-            //try{
-
-            //} catch (PDOException $e){}
+            //echo "<pre>".print_r($info, true)."</pre>";
+            
+            try{
+                // Damos el atributo ERRMODE_EXCEPTION que habilita el lanzamiento de excepciones
+                $this->PDO_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+                //Revisar la entrada de datos
+                $sqlBefore = $info["sql"];
+            
+                $this->result = $this->PDO_connection->prepare($sqlBefore);
+                
+                if($this->result->execute();):echo "OK";
+            } catch (PDOException $e){
+                $this->result = "ERROR --> ".$e;
+            }
+            echo "<pre>".print_r($this->result, true)."</pre>";
+            return $this->result;
         }
+
+        public function getObject($cls = "StdClass")
+		{
+			if (is_null($this->result)) return null ;
+			// si tenemos un resultado, lo devolvemos
+			return $this->result->fetchObject($cls) ;
+        }
+        
+        
     }
