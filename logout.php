@@ -8,10 +8,11 @@
 
     // Instanciar la sesión
     $session = Session::getInstance();
-    echo "<pre> NO -- ".var_dump( $session , true)."</pre>";
 
-    if ( !$session->isLogged() ):
+    if( !$session->isLogged() ):
         $session->redirect("login.php");
+    else:
+        $session->close();
     endif;
 ?>
 <!DOCTYPE html>
@@ -24,20 +25,15 @@
 </head>
 <body>
 
-    <h1>Test conexion</h1>
-    <a href="logout.php">Pa fuera</a>
-
-    <h1><?=$session->getUserName();?></h1>
+    <h1>Estas deslogueado</h1>
+    <p>Pulsa <a href="login.php">aqui</a> para volver al main</p>
 
 <?php
-
-    //$session->login();
     
-    echo "<pre>".print_r( $_SESSION["_SESSION"] , true)."</pre>";
+    echo "<pre> NO -- ".print_r( $_SESSION["_SESSION"] , true)."</pre>";
 
     //$ses->close();
 ?>
-    
     
 </body>
 </html>

@@ -102,21 +102,29 @@
          */
         public function query($info)
         {
-            //echo "<pre>".print_r($info, true)."</pre>";
+            echo "<pre>".print_r($info, true)."</pre>";
             
             try{
                 // Damos el atributo ERRMODE_EXCEPTION que habilita el lanzamiento de excepciones
                 $this->PDO_connection->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 //Revisar la entrada de datos
                 $sqlBefore = $info["sql"];
-            
+
                 $this->result = $this->PDO_connection->prepare($sqlBefore);
+                // foreach ( $info["options"] as $clave=>$valor ):
+                //     $this->result->bindValue( $clave , $valor , PDO::PARAM_STR);
+                // endforeach;
                 
-                $this->result->execute();
+                $this->result->execute( $info["options"]);
+                
+                //echo "<pre> 123".var_dump( $this->result->fetchAll() , true)."</pre>";
+
             } catch (PDOException $e){
-                $this->result = "ERROR --> ".$e;
+                return $this->result = "ERROR --> ".$e;
             }
-            echo "<pre>".print_r($this->result, true)."</pre>";
+
+            
+            //echo "<pre>".var_dump($this->result)."</pre>";
             return $this->result;
         }
 

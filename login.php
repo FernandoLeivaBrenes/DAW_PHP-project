@@ -8,34 +8,76 @@
 
     // Instanciar la sesión
     $session = Session::getInstance();
-
+    
     if( $session->isLogged() ):
         $session->redirect("main.php");
+    else:
+        
+        if(!empty($_POST)):
+    
+            $email = $_POST["email"];
+            $passwd = $_POST["passText"];
+    
+            if( $session->login($email, $passwd) )
+                echo "Hole";    
+            //$session->redirect("main.php");
+
+        endif;
+
+        //echo "NO -- ";
+    endif;
+    echo "<pre>".print_r( $session , true)."</pre>";
 
 ?>
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="h-100">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>EcoRent</title>
+    
+    <!--Bootstrap-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+
+    <!--Material Design -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="https://code.getmdl.io/1.3.0/material.indigo-pink.min.css">
+    <script defer src="https://code.getmdl.io/1.3.0/material.min.js"></script>
+    
+
+    <link rel="stylesheet" href="assets/css/index.css">
+    <script src="assets/js/index.js"></script>
+
+    <!--FlussoBorvo-->
+    <title>EcoRent </title> <!-- Sujeto a cambios -->
+
 </head>
-<body>
+<body class="h-100">
+    <main class="h-100 d-flex justify-content-center align-items-center flex-column">
+        <section><H1>LOGO</H1></section>
+        <section id="login-form" class="card">
+            <form class="card-body d-flex flex-column" action="" method="POST">
+                <!--Mejorable-->
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="text" id="email" name="email">
+                    <label class="mdl-textfield__label" for="email">Email</label>
+                    <span class="mdl-textfield__error">Not Okay</span>
+                </div>
 
-    <h1>Test conexion</h1>
+                <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                    <input class="mdl-textfield__input" type="password" id="passText" name="passText">
+                    <label class="mdl-textfield__label" for="passText">Password</label>
+                </div>
+                <br>
+                <input type="submit" class="btn btn-success"/>
 
-<?php
-    require_once "./libs/class/Session.php";
-
-    $ses = Session::getInstance();
-
-    $ses->login();
-    
-    echo "<pre>".print_r( $_SESSION["_sesion"] , true)."</pre>";
-
-    //$ses->close();
-?>
-    
+                <a class="text-right text-primary text-decoration-none" href="#">¿ Has olvidado tu nombre de usuario o contaseña ?</a>
+                <!--Mejorable-->
+            </form>
+        </section>
+    </main>
 </body>
 </html>

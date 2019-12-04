@@ -51,25 +51,27 @@ class Session
         session_destroy() ;
     }
 
-    public function login():bool
+    public function login( $email, $passwd ):bool
 		{
 			// Instanciamos la clase Database_PDO
 			$dbPDO = Database_PDO::getInstance( "ecorent", "root", "" ) ;
 
 			// buscamos el usuario
             //$sql  = "SELECT * FROM usuario WHERE email=:ema AND pass=MD5(:pas) ; " ;
-            $sql = "SELECT * FROM usuario WHERE email='Fernando@fernando.es' ";//AND pass=SHA2('1234') ;" ;
+            $sql = "SELECT * FROM usuario WHERE email=:emi AND passwd=SHA2( :pas , 512) ";//AND pass=SHA2('1234') ;" ;
             $info = array(
-                "sql"=>$sql ,
-                "opciones"=>"ni una"
+                "sql"=>$sql,
+                "options" =>[ 
+                    ":emi"=>$email, 
+                    ":pas"=>$passwd]
             );
-			
 
-            if ($dbPDO->query($info)):
-				// rescatar la información del usuario
+            if ( $dbPDO->query($info)->fetchAll() != 0 ):
+                // rescatar la información del usuario
                 $this->user = $dbPDO->getObject("Usuario");
-                
-				$_SESSION["_SESSION"] = serialize(self::$instance) ;
+                echo "<pre>".print_r( $this->user, true)."</pre>";
+            
+                $_SESSION["_SESSION"] = serialize( self::$instance ) ;
                 echo "<pre>".print_r(self::$instance, true)."</pre>";
 				// la sesión se ha iniciado
                 return true ;
@@ -78,6 +80,16 @@ class Session
 
 			// la sesión no se ha iniciado
 			return false ;
-		}
+        }
+        
+    public function redirect(string $url)
+    {
+        header("Location: $url") ;
+        die() ;
+    }
+
+    public function getUserName(){
+        return $this->user->getNombre();
+    }
 
 }
